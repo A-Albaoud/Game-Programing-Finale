@@ -1,3 +1,12 @@
+/**
+* Author: [Abdulrahman Albaoud]
+* Assignment: [Robotics Antibiotics]
+* Date due: 24/04/2026, 2:00pm
+* I pledge that I have completed this assignment without
+* collaborating with anyone else, in conformance with the
+* NYU School of Engineering Policies and Procedures on
+* Academic Misconduct.
+**/
 #include "CS3113/ShaderProgram.h"
 #include "CS3113/BorderThreat.h"
 #include "CS3113/BattleScene.h"
