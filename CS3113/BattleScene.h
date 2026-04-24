@@ -9,7 +9,7 @@ enum TurnState
     PLAYER_TURN,   // menu is live, waiting for player input
     ENEMY_TURN,    // enemy acts (resolved instantly, then → ANIMATING)
     ANIMATING,     // dialogue is displayed; countdown before next turn
-    BATTLE_END     // combat over — check didPlayerWin() to know the outcome
+    BATTLE_END     // combat over - check didPlayerWin() to know the outcome
 };
 
 // -- All mutable battle data in one place -------------------------------------
@@ -25,6 +25,7 @@ struct BattleState
     TurnState turnState    = PLAYER_TURN;
     int       menuCursor   = 0;     // 0=Fight 1=Magic 2=Item 3=Run
     bool      battleWon    = false;
+    bool      playerRanAway = false;
 
     // Enemy damage range (set per enemy type)
     int enemyMinDmg = 4;
@@ -63,13 +64,7 @@ struct BattleState
     float       dialogueTimer = 0.0f;
 };
 
-// -- Earthbound-style first-person battle screen -------------------------------
-//
-//   • Upper ~60 % of the virtual screen: enemy sprite, centred.
-//   • Lower ~40 %: dialogue/action box split into a message area (left) and a
-//     four-item menu (right).
-//   • No player battle sprite — just the UI.
-//
+
 // Coordinates are in virtual-screen space (960 × 720).
 // Instantiate, call initialise(), then drive via processInput() + update().
 class BattleScene : public Scene
@@ -159,8 +154,9 @@ public:
     // Feed per-frame input from main's processInput().
     void processInput(bool up, bool down, bool confirm);
 
-    bool isBattleOver() const { return mBattleState.turnState == BATTLE_END; }
-    bool didPlayerWin()  const { return mBattleState.battleWon;               }
+    bool isBattleOver()   const { return mBattleState.turnState == BATTLE_END;  }
+    bool didPlayerWin()   const { return mBattleState.battleWon;                }
+    bool didPlayerRun()   const { return mBattleState.playerRanAway;            }
 
     // Expose remaining HP/MP so the overworld can carry them forward.
     int  getPlayerHP()    const { return mBattleState.playerHP;    }

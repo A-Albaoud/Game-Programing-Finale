@@ -17,6 +17,7 @@ void TitleScene::initialise()
 
     mTutorial      = LoadTexture("assets/game/Tutorial.png");
     mTutorialMusic = LoadMusicStream("assets/game/Intro to game.mp3");
+    mTutorialMusic.looping = false;
 
     // Scale tutorial image to fit window width, compute how much we can scroll.
     if (mTutorial.width > 0)

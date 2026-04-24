@@ -595,6 +595,7 @@ void processInput()
             gTitleScene = nullptr;
             switchToScene(gLevels[0]);
             PlayMusicStream(gMusicMap1);
+            gPreviousTicks = (float)GetTime(); // prevent huge deltaTime spike after title wait
         }
         return;
     }
@@ -627,6 +628,7 @@ void processInput()
             // Restart at title screen -switchToScene will reinitialise the dungeon
             gTitleScene = new TitleScene(SCREEN_WIDTH, SCREEN_HEIGHT);
             gTitleScene->initialise();
+            gPreviousTicks = (float)GetTime();
         }
         return;
     }
@@ -656,6 +658,7 @@ void processInput()
 
             gTitleScene = new TitleScene(SCREEN_WIDTH, SCREEN_HEIGHT);
             gTitleScene->initialise();
+            gPreviousTicks = (float)GetTime();
         }
         return;
     }
@@ -815,9 +818,29 @@ void update()
                         PlaySound(gWinJingle);
                     }
                 }
+                else if (gBattleScene->didPlayerRun())
+                {
+                    // Player fled -return to overworld, no game over
+                    gPlayerHP        = gBattleScene->getPlayerHP();
+                    gPlayerMP        = gBattleScene->getPlayerMP();
+                    gPotionCount     = gBattleScene->getPotionCount();
+                    gBatteryCount    = gBattleScene->getBatteryCount();
+                    gHighPotionCount = gBattleScene->getHighPotionCount();
+                    gHighEtherCount  = gBattleScene->getHighEtherCount();
+                    StopMusicStream(gMusicBattle);
+                    StopMusicStream(gMusicBoss);
+                    StopMusicStream(gMusicBossPhase2);
+                    gBattleScene->shutdown();
+                    delete gBattleScene;
+                    gBattleScene      = nullptr;
+                    gInBattle         = false;
+                    gIsBossFight      = false;
+                    gBossPhase2Active = false;
+                    ResumeMusicStream(gOnMap2 ? gMusicMap2 : gMusicMap1);
+                }
                 else
                 {
-                    // Player died -clean up battle and show game over
+                    // Player died - clean up battle and show game over
                     StopMusicStream(gMusicBattle);
                     StopMusicStream(gMusicBoss);
                     StopMusicStream(gMusicBossPhase2);

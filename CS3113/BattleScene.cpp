@@ -287,7 +287,8 @@ void BattleScene::processInput(bool up, bool down, bool confirm)
             break;
         case 3:
             setDialogue("You fled!", 1.2f);
-            mBattleState.battleWon = false;
+            mBattleState.battleWon    = false;
+            mBattleState.playerRanAway = true;
             mPostAnimState = BATTLE_END;
             mBattleState.turnState = ANIMATING;
             break;
