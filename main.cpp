@@ -83,7 +83,7 @@ bool gShowInventory = false;
 
 // -- Victory screen ------------------------------------------------------------
 bool gVictoryPending = false;
-int  gVictoryGold    = 0;
+int  gVictoryGold    = 150;
 
 // -- Win screen (boss clear) ---------------------------------------------------
 bool      gWinScreenActive  = false;
@@ -445,6 +445,8 @@ void processInteraction()
             gShop.isOpen  = true;
             gShop.cursor  = 0;
             gShop.message = "";
+            gPlayerHP     = gPlayerMaxHP;
+            gPlayerMP     = gPlayerMaxMP;
             return;
         }
     }
@@ -822,7 +824,7 @@ void update()
                     }
                     else
                     {
-                        gVictoryGold    = GetRandomValue(5, 25);
+                        gVictoryGold    = GetRandomValue(15, 75);
                         gVictoryPending = true;
                         PlaySound(gWinJingle);
                     }
@@ -1007,7 +1009,6 @@ void renderVictory()
 
     DrawLine(BX + 20, BY + 86, BX + BW - 20, BY + 86, { 60, 140, 60, 180 });
 
-    // TODO: play victory jingle starting here
 
     DrawText(TextFormat("Obtained  %d  gold!", gVictoryGold),
              BX + 30, BY + 106, 28, { 255, 215, 0, 255 });
@@ -1080,7 +1081,7 @@ void render()
             gShader.begin();
             gBattleScene->render();
             gShader.setFloat("hitFlash", gHitFlash);
-            gShader.setVector2("sceneOrigin", { 0.0f, 0.0f });   // sentinel -no darkness in battle
+            gShader.setVector2("sceneOrigin", { 0.0f, 0.0f }); 
             gShader.end();
 
             if (gBossPhase2Active) gBorderThreat->render();
